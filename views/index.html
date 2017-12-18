@@ -1,0 +1,60 @@
+<html>
+
+<head>
+    <title>chat</title>
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+
+    <div class="container" id="nickname-container">
+        <h1>Usuario</h1>
+        <span id="nick-error"></span>
+        <form id="usuario">
+            <input type="text" id="nickname"></input>
+        </form>
+    </div>
+
+    <div class="container" id="chat-container">
+        <div class="row">
+            <div id="users" class="col-md-4">
+                <h2>Lista usuarios</h2>
+            </div>
+
+            <div class="col-md-4" id="chat-col">
+                <div class="row" id="room">
+                    <h2>Sala</h2>
+                </div>
+                <div class="row" id="chat">
+
+                </div>
+                <div class="row">
+                    <form id="send-message">
+                        <input type="text" id="new-message"></input>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4" id="pm-col">
+                <div class="row" id="user-to-pm">
+                    <h2>Smitha</h2>
+                </div>
+                <div class="row" id="private-chat">
+
+                </div>
+                <div class="row">
+                    <form id="send-pm">
+                        <input type="text" id="new-pm"></input>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/js.js"></script>
+
+</body>
+
+</html>
