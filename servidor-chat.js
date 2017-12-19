@@ -1,5 +1,6 @@
 var socketio = require('socket.io');
 var io;
+var db = require('./db');
 
 var usuarios = {};
 var clients = [];
@@ -10,8 +11,26 @@ exports.listen = function(server) {
     io.sockets.on('connection', function(socket) {
         escogerNick(socket);
         usuariosActivos(socket);
+        showOldMsgs(socket);
         broadcastMsg(socket);
         privateMsg(socket);
+        desconectar(socket);
+    });
+}
+
+function desconectar(socket) {
+    socket.on('disconnect', function() {
+        var ind = namesUsed.indexOf(usuarios[socket.id]);
+        delete namesUsed[ind];
+        delete clients[ind];
+        delete usuarios[socket.id];
+        io.sockets.emit('user disconnect', ind);
+    });
+}
+
+function showOldMsgs(socket) {
+    db.getOld(5, function(err, docs) {
+        socket.emit('load old', docs);
     });
 }
 
@@ -46,7 +65,10 @@ function escogerNick(socket) {
 function broadcastMsg(socket) {
     socket.on('message', function(msg) {
         var nick = usuarios[socket.id];
-        io.sockets.emit('message', { nick: nick, msg: msg });
+        db.saveMsg({ nick: nick, msg: msg }, function(err) {
+            if (err) throw err;
+            io.sockets.emit('message', { nick: nick, msg: msg });
+        });
     });
 }
 

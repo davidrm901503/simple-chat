@@ -54,7 +54,7 @@ $(function() {
         displayMsg(data.msg, data.nick)
     });
 
-    socket.on('load old msgs', function(docs) {
+    socket.on('load old', function(docs) {
         for (var i = docs.length - 1; i >= 0; i--) {
             displayMsg(docs[i].msg, docs[i].nick);
         }
