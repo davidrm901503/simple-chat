@@ -54,6 +54,49 @@ $(function() {
         displayMsg(data.msg, data.nick)
     });
 
+    var typing = false;
+    var timeout = undefined;
+
+    function timeoutFunction() {
+        typing = false;
+        socket.emit('stopped typing');
+    }
+
+    function onKeyDownNotEnter() {
+        if (typing == false) {
+            typing = true
+            socket.emit('is typing');
+            timeout = setTimeout(timeoutFunction, 4000);
+        } else {
+            clearTimeout(timeout);
+            timeout = setTimeout(timeoutFunction, 4000);
+        }
+
+    }
+    $("#new-message").keyup(function(e) {
+        if (e.keyCode == 13) {
+            var msg = $('#new-message').val();
+            socket.emit('message', msg);
+            $('#new-message').val('');
+        } else {
+            onKeyDownNotEnter();
+            // socket.emit('is typing');
+        }
+    });
+    socket.on('user typing', function(data) {
+        var html = "<span style='font-style: italic;font-size:12px;' class='msg typing-" + data.nick + "'>" + data.nick + "  esta escribiendo";
+        // $('#istyping').append(html);
+        $('#chat').append(html);
+
+    });
+    socket.on('stop typing', function(data) {
+        $('.typing-' + data.nick).remove();
+
+    });
+
+
+
+
     socket.on('load old', function(docs) {
         for (var i = docs.length - 1; i >= 0; i--) {
             displayMsg(docs[i].msg, docs[i].nick);

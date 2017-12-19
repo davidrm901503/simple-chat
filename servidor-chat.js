@@ -15,6 +15,7 @@ exports.listen = function(server) {
         broadcastMsg(socket);
         privateMsg(socket);
         desconectar(socket);
+        isTyping(socket)
     });
 }
 
@@ -77,4 +78,16 @@ function privateMsg(socket) {
         var from = usuarios[socket.id];
         clients[data.userToPM].emit('private message', { from: from, msg: data.msg });
     });
+}
+
+
+function isTyping(socket) {
+
+    socket.on('is typing', function() {
+        io.sockets.emit('user typing', { nick: usuarios[socket.id] });
+    });
+    socket.on('stopped typing', function() {
+        io.sockets.emit('stop typing', { nick: usuarios[socket.id] });
+    });
+
 }
